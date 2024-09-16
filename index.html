@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Audio Cue Player</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    #header {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+    }
+
+    #drop-zone {
+      width: 100%;
+      height: 300px;
+      border: 2px dashed #ccc;
+      border-radius: 10px;
+      text-align: center;
+      line-height: 300px;
+      font-size: 20px;
+      color: #333;
+      margin-top: 50px; /* Space for the play button */
+    }
+
+    #file-list-container {
+      margin-top: 20px;
+      max-height: 60%; /* Set a fixed height for the list container */
+      overflow-y: auto;  /* Enable vertical scrolling */
+      padding-right: 10px; /* Optional: Add some padding to prevent content from being cut off by the scrollbar */
+    }
+
+    .column-labels {
+      display: grid;
+      grid-template-columns: 3fr 1.5fr 1fr 1fr 1fr; /* Define grid columns */
+      gap: 5px; /* Space between columns */
+      margin-top: 10px;
+      font-weight: bold;
+      background: #f0f0f0;
+      border-bottom: 1px solid #ddd;
+      padding: 5px;
+    }
+
+    .column-labels div,
+.file-item div {
+  text-align: center;
+  padding: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center; /* Ensure content is vertically centered */
+}
+
+    .file-list {
+      display: flex;
+      flex-direction: column; /* Stack files vertically */
+      gap: 5px; /* Add spacing between file items */
+      width: 100%; /* Ensure the list container takes the full width */
+    }
+
+    .file-item {
+      display: grid;
+      grid-template-columns: 3fr 1.5fr 1fr 1fr 1fr; /* Ensure this matches the header */
+      gap: 5px;
+      padding: 5px;
+      cursor: pointer;
+      border-bottom: 1px solid #ddd;
+      align-items: center; /* Center items vertically */
+      width: 100%; /* Ensure each file item takes the full width */
+    }
+
+    .file-item.highlight {
+      background-color: #f0f0f0;
+    }
+
+    .fade-control {
+      display: flex;
+      align-items: center;
+      margin-left: 10px;
+    }
+
+    .fade-control input {
+      width: 60px;
+      text-align: center;
+      margin: 0 5px;
+    }
+
+    .fade-control button {
+      width: 25px;
+      height: 25px;
+    }
+
+    #playback-bar {
+      position: fixed; /* Fixed positioning to keep it at the bottom of the viewport */
+      bottom: 0; /* Align to the bottom */
+      width: 100%; /* Full width of the viewport */
+      background-color: #f0f0f0;
+      padding: 10px;
+      box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 1000; /* Ensure it appears above other elements */
+    }
+
+    #playback-bar input[type="range"] {
+      flex-grow: 1;
+      margin: 0 10px;
+    }
+
+    #playback-bar button {
+      margin-right: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div id="header">
+    <button id="play-button-header">Play</button>
+  </div>
+  <div id="drop-zone">Drag and drop files here</div>
+  <div id="file-list-container">
+    <div class="column-labels">
+      <div class="file-label">File</div>
+      <div class="length-label">Length</div>
+      <div class="played-label">Played</div>
+      <div class="fadein-label">Fade In</div>
+      <div class="fadeout-label">Fade Out</div>
+    </div>
+    <div class="file-list" id="file-list-items"></div>
+  </div>
+  <div id="playback-bar">
+    <button id="prev-button">Prev</button>
+    <button id="play-button">Play</button>
+    <button id="next-button">Next</button>
+    <input type="range" id="progress-bar" value="0" max="100" step="1">
+  </div>
+  <script src="renderer.js"></script>
+</body>
+</html>
