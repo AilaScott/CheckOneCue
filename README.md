@@ -7,14 +7,16 @@
  
  These are the features I would like to add in the future:
 
- ### Fade-in feature
  ### Support for .aif files
  ### Looping w/ ability to adjust loop points
  ### Save/Load show from .xml
  ### Sample Color Coding
+ ### Various Error Messages: File types, missing file, etc.
 <P>
 
 
  
  IF YOU ARE INTERESTED IN CONTRIBUTING PLEASE GO TO THE DISCUSSION PAGE!
 </P>
+
+
