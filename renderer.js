@@ -12,6 +12,7 @@ let files = []; // Store all files for navigation
 let fadeInInterval; // For fade-in effect
 let fadeOutInterval; // For fade-out effect
 let initialVolume = 1; // Default Volume Level
+let spacebarPressed = false; // Flag to track if spacebar has been pressed
 
 // Function to format time in mm:ss:ms
 function formatTime(milliseconds) {
@@ -84,24 +85,22 @@ function stopAudio() {
 // Function to play selected audio file
 function playAudio(fileUrl) {
   if (fileUrl) {
-    if (audio.src === fileUrl) {
-      if (isPlaying) {
+    if (spacebarPressed) {
+      if (audio.src === fileUrl && isPlaying) {
         fadeOutAudio(3000); // Default fade-out duration of 3000 ms
       } else {
-        fadeInAudio(0); // Immediate start if the same file is selected and not playing
+        audio.src = fileUrl;
+        const highlightedItem = document.querySelector('.file-item.highlight');
+        const fadeInDuration = highlightedItem ? parseInt(highlightedItem.dataset.fadein, 10) || 0 : 0;
+
+        console.log(`Fade-in duration: ${fadeInDuration}`); // Debug log
+
+        fadeInAudio(fadeInDuration);
       }
+      spacebarPressed = false; // Reset the flag after playing
     } else {
-      stopAudio(); // Stop any current playback
-      audio.src = fileUrl;
-      const highlightedItem = document.querySelector('.file-item.highlight');
-      const fadeInDuration = highlightedItem ? parseInt(highlightedItem.dataset.fadein, 10) || 0 : 0;
-
-      console.log(`Fade-in duration: ${fadeInDuration}`); // Debug log
-
-      fadeInAudio(fadeInDuration);
+      console.error('Spacebar has not been pressed for the selected file.');
     }
-  } else {
-    console.error('No file selected.');
   }
 }
 
@@ -227,14 +226,26 @@ function handleFadeControlUpdates(listItem) {
 
 // Handle keyboard shortcuts
 document.addEventListener('keydown', (event) => {
+  if (event.code === 'Escape') {
+    const highlightedItem = document.querySelector('.file-item.highlight');
+    if (highlightedItem) {
+      const fadeOutDuration = parseInt(highlightedItem.dataset.fadeout, 10) || 3000; // Default to 3000 ms if not set
+      fadeOutAudio(fadeOutDuration);
+    }
+  }
+
+  if (event.code === 'Delete') {
+    const highlightedItem = document.querySelector('.file-item.highlight');
+    if (highlightedItem) {
+      removeFileItem(highlightedItem);
+    }
+  }
+
   if (event.code === 'Space') {
     event.preventDefault(); // Prevent the default spacebar action (e.g., scrolling)
+    spacebarPressed = true; // Set the flag to allow playing
     if (currentFile) {
-      if (isPlaying) {
-        stopAudio(); // Stop playback if already playing
-      } else {
-        playAudio(currentFile);
-      }
+      playAudio(currentFile);
     } else {
       console.error('No file selected.');
     }
